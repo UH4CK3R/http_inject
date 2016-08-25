@@ -13,10 +13,7 @@ def packet_block(packet):
         re_msg = "HTTP/1.1 302 Found\r\nLocation: http://warning.or.kr\r\n\r\n"
         s_MAC = packet[Ether].src
         d_MAC = packet[Ether].dst
-
-        print re_seq
-        print re_ack
-
+        
         sendp(Ether(src=d_MAC,dst=s_MAC)/IP(dst=packet[IP].src,src=s_ip)/TCP(sport=80, dport=packet[TCP].sport, flags="A",seq=re_seq,ack=re_ack))
         sendp(Ether(src=d_MAC,dst=s_MAC)/IP(dst=packet[IP].src,src=s_ip)/TCP(sport=80, dport=packet[TCP].sport, flags="A",seq=re_seq,ack=re_ack)/Raw(re_msg))
 
