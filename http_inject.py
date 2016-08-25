@@ -10,10 +10,15 @@ def packet_block(packet):
     if str(packet).find("HTTP")!=-1 and packet[IP].dst==s_ip:
         re_seq = packet[TCP].ack
         re_ack = packet[TCP].seq+packet[IP].len-40
-        re_msg = "HTTP/1.1 302 Found\r\nLocation: http://warning.or.kr"
+        re_msg = "HTTP/1.1 302 Found\r\nLocation: http://warning.or.kr\r\n\r\n"
+        s_MAC = packet[Ether].src
+        d_MAC = packet[Ether].dst
 
-        send(IP(dst=packet[IP].src,src=s_ip)/TCP(sport=80, dport=packet[TCP].sport, flags="A",seq=re_seq,ack=re_ack))
-        send(IP(dst=packet[IP].src,src=s_ip)/TCP(sport=80, dport=packet[TCP].sport, flags="A",seq=re_seq,ack=re_ack)/Raw(re_msg))
+        print re_seq
+        print re_ack
+
+        sendp(Ether(src=d_MAC,dst=s_MAC)/IP(dst=packet[IP].src,src=s_ip)/TCP(sport=80, dport=packet[TCP].sport, flags="A",seq=re_seq,ack=re_ack))
+        sendp(Ether(src=d_MAC,dst=s_MAC)/IP(dst=packet[IP].src,src=s_ip)/TCP(sport=80, dport=packet[TCP].sport, flags="A",seq=re_seq,ack=re_ack)/Raw(re_msg))
 
         print "[+] Packet Blocking ..."
 
